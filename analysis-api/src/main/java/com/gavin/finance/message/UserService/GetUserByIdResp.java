@@ -16,6 +16,7 @@ public class GetUserByIdResp extends BaseResp {
     private User user;
 
     public GetUserByIdResp(User user) {
+        super(true, "OK");
         this.user = user;
     }
 
