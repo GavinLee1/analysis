@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gavin.finance.repository.mybatis.mapper.UserMapper">
+    <resultMap id="userResultMap" type="com.gavin.finance.pojo.User">
+        <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="name" column="name"/>
+        <result property="remark" column="remark"/>
+        <result property="avatar" column="avatar"/>
+        <result property="gender" column="gender"/>
+        <result property="birthday" column="birthday"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="selectUserById" parameterType="int" resultMap="userResultMap">
+        SELECT * FROM user
+        WHERE id = #{id}
+    </select>
+
+    <select id="getTotalUserNum" resultType="int">
+        SELECT COUNT(*) FROM user
+    </select>
+
+    <select id="pageGetAllUser" parameterType="map" resultMap="userResultMap">
+        SELECT * FROM user
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="listSelectUserByIdList" resultMap="userResultMap">
+        SELECT * FROM user WHERE id IN
+        <foreach item="item" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <insert id="createUser" parameterType="com.gavin.finance.pojo.User" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO `user`(name, remark, avatar, gender, birthday, email, phone, create_time, update_time)
+        VALUES(#{name}, #{remark}, #{avatar}, #{gender}, #{birthday}, #{email}, #{phone}, #{createTime}, #{updateTime});
+    </insert>
+
+    <update id="updateUserByIdWithConditionMap" parameterType="map">
+        UPDATE user
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="remark != null">remark=#{remark},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="gender != null">gender=#{gender},</if>
+            <if test="birthday != null">birthday=#{birthday},</if>
+            <if test="email != null">email=#{email},</if>
+            <if test="phone != null">phone=#{phone},</if>
+            <if test="createTime != null">create_time=#{createTime},</if>
+            <if test="updateTime != null">update_time=#{updateTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>
